@@ -21,7 +21,7 @@ dependencies {
     implementation(platform("com.intellectualsites.bom:bom-newest:1.55")) // Ref: https://github.com/IntellectualSites/bom
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
-    implementation("com.github.SlimifiedxD:quartz:66fb749254")
+    implementation("com.github.SlimifiedxD:quartz:adeedd89e8")
     annotationProcessor("com.github.SlimifiedxD:quartz:66fb749254")
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
     testImplementation(platform("org.junit:junit-bom:5.10.0"))

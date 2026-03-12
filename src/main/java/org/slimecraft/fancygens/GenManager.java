@@ -19,9 +19,11 @@ import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockState;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import org.slimecraft.bedrock.task.Task;
 import org.slimecraft.bedrock.util.Ticks;
 import org.slimecraft.fancygens.dto.Generator;
@@ -31,6 +33,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -47,10 +50,13 @@ public class GenManager {
     }
 
     public void addGenerator(Generator gen) {
-        generators.add(gen);
-        try (FileWriter writer = new FileWriter(gensPath.resolve(gen.name().toLowerCase() + ".json").toFile())) {
-            gson.toJson(gen, writer);
-            taskForGen(gen);
+        try {
+            generators.add(gen);
+            Path filePath = gensPath.resolve(gen.name().toLowerCase() + ".json");
+            try (FileWriter writer = new FileWriter(filePath.toFile())) {
+                gson.toJson(gen, writer);
+                taskForGen(gen);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,13 +111,22 @@ public class GenManager {
                     World world = BukkitAdapter.adapt(bukkitWorld);
                     CuboidRegion region = new CuboidRegion(one.toBlockVector3(), two.toBlockVector3());
                     BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
-                    ForwardExtentCopy copy = new ForwardExtentCopy(world, region, clipboard, region.getMinimumPoint());
-                    Operations.complete(copy);
+                    try (EditSession editSession = WorldEdit.getInstance().newEditSession(world)) {
+                        ForwardExtentCopy copy = new ForwardExtentCopy(editSession, region, clipboard, region.getMinimumPoint());
+                        Operations.complete(copy);
+                    }
                     List<Block> blocks = region.stream().map(v3 -> bukkitWorld.getBlockAt(v3.x(), v3.y(), v3.z())).toList(); // we could just use the BlockVector3 but i prefer Bukkit API
                     for (Block block : blocks) {
                         block.setType(gen.type());
                     }
                 })
                 .run();
+    }
+
+    public void modifyGeneratorBlockType(String name, @NotNull Material type) {
+        findByName(name).ifPresent(generator -> {
+            deleteGenerator(name);
+            addGenerator(generator.withType(type));
+        });
     }
 }
