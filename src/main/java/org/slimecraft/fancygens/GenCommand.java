@@ -70,6 +70,17 @@ public class GenCommand extends PaperCommand {
             setPermsOnPre(pre);
             pre.addOptions("name", StringArgumentType.StringType.SINGLE_WORD);
         });
+
+        addFormat("edit name:string respawn_cooldown:int", ctx -> {
+            if (!(ctx.getSource().getSender() instanceof final Player player)) return;
+            String name = ctx.get("name");
+            int respawnCooldown = ctx.get("respawn_cooldown");
+            manager.modifyGeneratorRespawnCooldown(name, respawnCooldown);
+            player.sendMessage(MiniMessage.miniMessage().deserialize("<green>Modified respawn cooldown of the gen!"));
+        }, pre -> {
+            setPermsOnPre(pre);
+            pre.addOptions("name", StringArgumentType.StringType.SINGLE_WORD);
+        });
     }
 
     private void addPreFormat(String identifier, Consumer<PaperContext> ctxConsumer) {

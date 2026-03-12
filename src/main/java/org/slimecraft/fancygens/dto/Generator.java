@@ -8,4 +8,8 @@ public record Generator(String name, Pos one, Pos two, Material type, @Serialize
     public Generator withType(@NotNull Material type) {
         return new Generator(name, one, two, type, respawnCooldown);
     }
+
+    public Generator withRespawnCooldown(int respawnCooldown) {
+        return new Generator(name, one, two, type, respawnCooldown);
+    }
 }

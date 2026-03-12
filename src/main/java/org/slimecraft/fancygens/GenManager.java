@@ -129,4 +129,11 @@ public class GenManager {
             addGenerator(generator.withType(type));
         });
     }
+
+    public void modifyGeneratorRespawnCooldown(String name, int respawnCooldown) {
+        findByName(name).ifPresent(generator -> {
+            deleteGenerator(name);
+            addGenerator(generator.withRespawnCooldown(respawnCooldown));
+        });
+    }
 }
