@@ -115,8 +115,6 @@ public class GenManager {
 
     private void taskForGen(Generator gen) {
         timeUntilRespawn.put(gen, gen.respawnCooldown());
-        System.out.println(gen.one());
-        System.out.println(gen.two());
         CuboidRegion holoRegion = new CuboidRegion(gen.one().toBlockVector3(), gen.two().toBlockVector3());
         holoRegion.setWorld(BukkitAdapter.adapt(Bukkit.getWorld(gen.one().world())));
         TextHologramData holoMeta = new TextHologramData(gen.name(), centerOf(holoRegion));
@@ -129,7 +127,7 @@ public class GenManager {
 
         Task.builder()
                 .expireWhen(t -> !generators.contains(gen))
-                .repeat(Ticks.seconds(1))
+                .repeat(gen.respawnCooldown() > 0 ? Ticks.seconds(1) : 1L)
                 .whenRan(t -> {
                     holoMeta.setText(List.of("<gray>" + gen.name(), "<dark_gray>" + turnSecondsIntoPrettyString(timeUntilRespawn.get(gen))));
                     timeUntilRespawn.put(gen, timeUntilRespawn.get(gen) - 1);
