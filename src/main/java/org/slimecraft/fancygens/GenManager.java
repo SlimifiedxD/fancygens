@@ -82,6 +82,10 @@ public class GenManager {
         Generator gen = optGen.get();
         generators.remove(gen);
         genBlocks.remove(gen);
+        if (genHolos.get(gen) != null) {
+            FancyHologramsPlugin.get().getHologramManager().removeHologram(genHolos.get(gen));
+            genHolos.remove(gen);
+        }
         File file = gensPath.resolve(name.toLowerCase() + ".json").toFile();
         file.delete();
         return true;
@@ -102,10 +106,6 @@ public class GenManager {
                 Generator gen = gson.fromJson(reader, Generator.class);
                 gens.add(gen);
                 taskForGen(gen);
-                if (genHolos.get(gen) != null) {
-                    FancyHologramsPlugin.get().getHologramManager().removeHologram(genHolos.get(gen));
-                    genHolos.remove(gen);
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
