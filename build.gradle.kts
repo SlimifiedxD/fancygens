@@ -15,9 +15,12 @@ repositories {
     }
     maven("https://jitpack.io")
     maven("https://maven.enginehub.org/repo/")
+    maven("https://repo.fancyinnovations.com/releases")
 }
 
 dependencies {
+    compileOnly("de.oliver:FancyHolograms:2.9.1")
+    compileOnly("io.github.miniplaceholders:miniplaceholders-api:3.0.1")
     implementation(platform("com.intellectualsites.bom:bom-newest:1.55")) // Ref: https://github.com/IntellectualSites/bom
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
