@@ -102,7 +102,10 @@ public class GenManager {
                 Generator gen = gson.fromJson(reader, Generator.class);
                 gens.add(gen);
                 taskForGen(gen);
-                genHolos.remove(gen);
+                if (genHolos.get(gen) != null) {
+                    FancyHologramsPlugin.get().getHologramManager().removeHologram(genHolos.get(gen));
+                    genHolos.remove(gen);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
